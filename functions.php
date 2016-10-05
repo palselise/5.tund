@@ -100,7 +100,35 @@
 		
 	}
 	
-	
+	function getAllPeople () {
+		$mysqli = new mysqli($GLOBALS["serverHost"],$GLOBALS["serverUsername"],$GLOBALS["serverPassword"],$GLOBALS["database"]);
+		$stmt = $mysqli->prepare("
+			SELECT id, gender, color, created
+			FROM clothingOnTheCampus
+		");
+		echo $mysqli->error;
+		
+		$stmt->bind_result($id, $gender, $color, $created);
+		$stmt->execute();
+		//php massiv on array("Elise", "R")
+		$result = array();
+		//seni kuni on üks rinda andmeid saada (10 rida = 10 korda)
+		while ($stmt->fetch()) {
+			
+			$person = new StdClass();
+			$person->id = $id;
+			$person->gender = $gender;
+			$person->color = $color;
+			$person->created = $created;
+			//echo $color."<br>";
+			array_push($result, $person);
+		}
+		
+		$stmt->close();
+		$mysqli->close();
+		
+		return $result;
+	}
 	
 	
 	
@@ -126,7 +154,7 @@
 	$answer = sum(10,15);
 	echo $answer;
 	echo "<br>";
-	echo hello ("Romil", "R.");
+	echo hello ("Elise", "E.");
 	*/
 	
 
